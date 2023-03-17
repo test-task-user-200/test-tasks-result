@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-functions
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azure-functions
+  template:
+    metadata:
+      labels:
+        app: azure-functions
+    spec:
+      containers:
+      - name: message-queue
+        image: my-docker-registry/message-queue:latest
+        env:
+        - name: AZURE_STORAGE_CONNECTION_STRING
+          value: "<connection-string>"
+      - name: hello-world
+        image: my-docker-registry/hello-world:latest
+        env:
+        - name: AZURE_STORAGE_CONNECTION_STRING
+          value: "<connection-string>"
+      imagePullSecrets:
+      - name: my-registry-secret
